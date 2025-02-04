@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">RecipeApp</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="instructions">Инструкции</string>
+    <string name="findOtherRecipe">Найди другой рецепт</string>
+    <string name="errorDownloadsRecipe"> Ошибка загрузки рецепта</string>
+    <string name="successDownloadsRecipes"> Новый рецепт успешно загружен</string>
+</resources>
