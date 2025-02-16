@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+   <LinearLayout
+
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+       <Button
+       android:id="@+id/createManualButton"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="@string/createManualRecipe"
+       />
+
+       <Button
+           android:id="@+id/downloadButton"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="@string/findOtherRecipe"
+           />
+       <LinearLayout
+       android:id="@+id/linerLayout"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="3dp"
+            tools:layout_editor_absoluteY="0dp">
+
+
+            <ImageView
+                android:id="@+id/recipeImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/addImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/text_view_style"
+                android:padding="2dp"
+                android:text="@string/addImage"
+                app:layout_constraintBottom_toBottomOf="@+id/recipeImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <EditText
+                android:id="@+id/recipeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:hint="@string/hint_name_recipe"
+                android:paddingTop="8dp"
+                android:shadowColor="@color/gray"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="3"
+                android:textSize="20sp"
+                />
+
+            <EditText
+                android:id="@+id/recipeIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:hint="@string/ingredients_hint"
+                android:paddingTop="8dp"
+               />
+
+            <TextView
+                android:id="@+id/editRecipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/text_view_style"
+                android:padding="2dp"
+                android:text="@string/editRecipe"/>
+
+           <EditText
+               android:id="@+id/recipeInstructions"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="4dp"
+               android:clickable="false"
+               android:focusable="false"
+               android:hint="@string/instructions"
+               android:inputType="textMultiLine"
+               android:paddingTop="8dp" />
+           <Button
+               android:id="@+id/saveButton"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="@string/saveRecipe" />
+
+            <!--ScrollView
+               xmlns:android="http://schemas.android.com/apk/res/android"
+               xmlns:app="http://schemas.android.com/apk/res-auto"
+               android:layout_width="match_parent"
+               android:orientation="vertical"
+               android:layout_height="350dp" >
+
+
+           </ScrollView-->
+
+       </LinearLayout>
+
+   </LinearLayout>
+
+</ScrollView>
