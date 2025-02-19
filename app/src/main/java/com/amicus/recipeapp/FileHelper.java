@@ -16,7 +16,7 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 public class FileHelper {
-    private static File getFilePath(String fileName, Context context){
+     static File getFilePath(String fileName, Context context){
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q){
             return new  File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),fileName);
         }else return  new File(Environment.getExternalStorageDirectory(),fileName);

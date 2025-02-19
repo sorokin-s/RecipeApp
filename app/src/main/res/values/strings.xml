@@ -1,19 +1,27 @@
 <resources>
-    <string name="app_name">Книга рецертов</string>
+    <string name="app_name">My Recipes</string>
+    <string name="app_name_ru">Мои рецепты</string>
     <string name="hint_name_recipe">Введите название своего рецепта</string>
     <string name="ingredients_hint">Укажите ингредиенты блюда</string>
     <string name="ingredients">Ингредиенты:\n</string>
+    <string name="recipe_id">id рецепта в БД</string>
     <string name="instructions">Опишите инструкцию приготовления</string>
-    <string name="findOtherRecipe">Загрузить рецепт из интернета</string>
+    <string name="findOtherRecipe">Загрузить из интернета</string>
     <string name="createManualRecipe">Создать свой рецепт</string>
     <string name="saveRecipe">Сохранить рецепт</string>
+    <string name="deleteRecipe">Удалить рецепт</string>
     <string name="errorDownloadsRecipe"> Ошибка загрузки рецепта</string>
     <string name="successDownloadsRecipes"> Новый рецепт успешно загружен</string>
     <string name="editRecipe">Редактировать рецепт</string>
+    <string name="translateRecipe">Перевести</string>
     <string name="addImage">Добавить фото</string>
     <string name="myRecipes">Мои рецепты</string>
     <string name="createRecipe">Создать новый рецепт</string>
     <string name="exitApp">Выход</string>
+    <string name="about_version">"My Recipes\nv 1.0"</string>
+    <string name="about_author">Cook with joy\n\nauthor:\nSV Softwarе</string>
+
+
 
 
 </resources>

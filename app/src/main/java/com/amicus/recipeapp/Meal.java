@@ -8,41 +8,40 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "recipesDB")
 public class Meal {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int id;    //0
     @SerializedName("strMeal")
     @Expose
-    private String mealName;
-    @SerializedName("strInstructions")
-    @Expose
-    private String instructions;
+    private String mealName;//1
+
     @SerializedName("strMealThumb")
     @Expose
-    private String imageUrl;
+    private String imageUrl;//2
     @SerializedName("strIngredient1")
     @Expose
-    private String ingredient1;
+    private String ingredient1; //3
     @SerializedName("strIngredient2")
     @Expose
-    private String ingredient2;
+    private String ingredient2;//4
     @SerializedName("strIngredient3")
     @Expose
-    private String ingredient3;
+    private String ingredient3;//5
 
     @SerializedName("strIngredient4")
     @Expose
-    private String ingredient4;
+    private String ingredient4;//6
     @SerializedName("strIngredient5")
     @Expose
-    private String ingredient5;
+    private String ingredient5;//7
     @SerializedName("strIngredient6")
     @Expose
-    private String ingredient6;
-
-
+    private String ingredient6;//8
 
     @SerializedName("strIngredient7")
     @Expose
-    private String ingredient7;
+    private String ingredient7;//9
+    @SerializedName("strInstructions")
+    @Expose
+    private String instructions;//10
     public String getIngredient7() {
         return ingredient7;
     }
