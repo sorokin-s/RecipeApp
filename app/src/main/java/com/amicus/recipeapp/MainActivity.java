@@ -39,6 +39,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
      static final String ID_KEY="ID_KEY";
      static final String LOAD_FROM_DB="OAD_FROM_DB";
+
     Boolean load;
     LinearLayout layout;
     Button btnCreateRecipe;
@@ -52,18 +53,21 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     AppDataBase db;
     DaoRecipe daoRecipe;
+    TranslationHelper translationHelper;
     ActivityResultLauncher<Intent> startActivityFor_Result = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onActivityResult(ActivityResult result) { // после закрытия второй активити обрабатываем результат
                     if(result.getResultCode() == Activity.RESULT_OK){
-                       // Intent intent = result.getData();
-                       // assert intent != null;
-                     //   load = intent.getBooleanExtra(LOAD_FROM_DB,false);
+//                        Intent intent = result.getData();
+//                        assert intent != null;
+//                        load = intent.getBooleanExtra(LOAD_FROM_DB,false);
+
                         itemsRecipe.clear();
                         fillItemsRecipe();
                         recyclerAdapter.notifyDataSetChanged();// обновляeм RecyclerView
+
                     }
 
                 }
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView= findViewById(R.id.recipe_list);
         linearLayoutManager =new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+        TranslationHelper.downloadModel();
         itemClickListener = new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Item recipe, int position, View itemView) {
@@ -124,8 +129,9 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"NotifyDataSetChanged", "ResourceAsColor"})
     void fillItemsRecipe(){          // заполняем список  данными  из БД
         Executors.newSingleThreadExecutor().execute(()-> {
-            for(Meal b:daoRecipe.getAllRecipe())
-                itemsRecipe.add(new Item(b.id,b.getImageUrl(),b.getMealName()));
+            for(Meal b:daoRecipe.getAllRecipe()) {
+                itemsRecipe.add(new Item(b.id, b.getImageUrl(), b.getMealName()));
+            }
             title.setText("Мои рецепты");
             title.append("\nсохранено рецертов: "+itemsRecipe.size());
 

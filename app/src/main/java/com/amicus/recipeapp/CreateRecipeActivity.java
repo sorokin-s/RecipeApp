@@ -34,7 +34,10 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import retrofit2.Call;
@@ -48,11 +51,14 @@ public class CreateRecipeActivity extends AppCompatActivity {
     private static final int YOUR_RESULT_CODE = 1;
     private static int id;
     private static boolean loadFromDb;
+    boolean downloadFromInternet=false;
     EditText recipeName;
     EditText recipeInstructions;
     EditText recipeIngredients;
-    Boolean blinker=false; //  разрешения редактирования рецепта
-    Boolean blkEdited =false; // признак попытки редактирования згр. из БД рецепта
+    boolean blinker=false; //  разрешения редактирования рецепта
+    boolean blkEdited =false; // признак попытки редактирования згр. из БД рецепта
+    boolean translated = false;
+
     ImageView recipeImage;
     TextView  btnAddImageFromStorage, btnTranslate;// выполняют функцию кнопки
     Button btnEditRecipe;
@@ -105,6 +111,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
         //////////////////////////////////////////////////////////////////////////////////
         btnEditRecipe.setOnClickListener(b-> {  // кнопка вкл/откл редактирования рецепта
                 blinker = !blinker;
+                blkEdited=true;
                 recipeName.setClickable(blinker);
                 recipeName.setFocusable(blinker);
                 recipeName.setCursorVisible(blinker);
@@ -134,10 +141,9 @@ public class CreateRecipeActivity extends AppCompatActivity {
                     btnAddImageFromStorage.setVisibility(View.VISIBLE);
                     btnEditRecipe.setText("Закончить редактирование");
                 }
-            blkEdited=true;
+
         });
         translationHelper = new TranslationHelper();
-        translationHelper.downloadModel();
         translationHelper.addLister(event->translateText( event.getNewValue()));
         btnTranslate.setOnClickListener(b->{           // кнопка перевода текста с исходного языка
             String[]texts ={String.valueOf(recipeName.getText()),
@@ -155,6 +161,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
             intent.setDataAndType(uri, "*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(intent,101);
+
         });
 
 
@@ -169,6 +176,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
             btnEditRecipe.callOnClick();
            scrollView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.main3));
             btnSaveInDB.setVisibility(View.VISIBLE);
+            btnTranslate.setVisibility(View.VISIBLE);
         });
 
         btnDownload.setOnClickListener(b->{       // загрузка рецепта из Internet
@@ -178,15 +186,15 @@ public class CreateRecipeActivity extends AppCompatActivity {
             btnAddImageFromStorage.setVisibility(View.GONE);
                 if(blinker){
                     btnEditRecipe.callOnClick();
-
                 }
                 scrollView.setVisibility(View.VISIBLE);
                 fetchRandomRecipe();
+            btnTranslate.setVisibility(View.VISIBLE);
 
         });
 
 
-        btnSaveInDB.setOnClickListener(b->{                   // сохранение Рецепта
+        btnSaveInDB.setOnClickListener(b->{                         // сохранение Рецепта
             String nameFile = recipeName.getText()+".jpg";
             if(blkEdited&&loadFromDb){   // если сохраняем загруженный из БД рецепт
                 Executors.newSingleThreadExecutor().execute(()->{ // отправляем запрос в БД для записи значений
@@ -198,7 +206,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
                 });
                 FileHelper.saveToFile(nameFile,recipeImage,this);// сохраняем на диске изображение из ImageView c новым именем
-            }else{
+            }if(downloadFromInternet){
                 Executors.newSingleThreadExecutor().execute(()->{ // отправляем запрос в БД для записи значений
                     daoRecipe.insert(new Meal(nameFile,    //имя файлу изображения в БД
                             String.valueOf(recipeName.getText()),
@@ -217,7 +225,12 @@ public class CreateRecipeActivity extends AppCompatActivity {
         btnDeleteFromDB.setOnClickListener(b->{
             deleteDialog();    //вызываем диалог удаления рецепта из БД
         });
-        if(loadFromDb)loadRecipeFromDb(id);
+        if(loadFromDb){
+            loadRecipeFromDb(id);
+            btnTranslate.setVisibility(View.VISIBLE);
+        }else{
+            btnTranslate.setVisibility(View.GONE);
+        }
 
 
     }
@@ -228,6 +241,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
       Log.d("translateText ",texts.get(0));
        recipeIngredients.setText(texts.get(1));
        recipeInstructions.setText(texts.get(2));
+       blkEdited = true;
     }
     public void initializeView(){ // инициализация элементов активити в зависимости от задачи
         Bundle extras = getIntent().getExtras();
@@ -259,26 +273,59 @@ public class CreateRecipeActivity extends AppCompatActivity {
 //        setResult(RESULT_OK,intent);
         super.onDestroy();
     }
-    private void loadRecipeFromDb(int idRecipe){
-        Executors.newSingleThreadExecutor().execute(()-> {
-            try{
-            Meal meal = daoRecipe.getRecipeById(idRecipe);
-            Log.d("Complete","meal");
-            File file = FileHelper.getFilePath(meal.getImageUrl(), this);
-            Log.d("Complete"+id,"Uri");
-            recipeImage.setImageURI(Uri.parse(file.getPath()));
-            Log.d("Complete"+id,"image");
-            recipeName.setText(meal.getMealName()); // ERROR!!! Can't create handler inside thread Thread[pool-13-thread-1,5,main] that has not called Looper.prepare()
-             Log.d("Complete"+id,"name");
-            recipeIngredients.setText(meal.getIngredient1());
-             Log.d("Complete"+id,"ingredient");
-            recipeInstructions.setText( meal.getInstructions());
-             Log.d("Complete"+id,"instructions");
-            } catch(Exception e){Log.d("Exeption",e.getMessage());}
 
-        });
+   private void loadRecipeFromDb(int idRecipe){
+//        Executors.newSingleThreadExecutor().execute(()->{
+//            try{
+//
+//                Meal meal = daoRecipe.getRecipeById(idRecipe);
+//                recipeName.setText(meal.getMealName());
+//                Log.d("Complete-"+Thread.currentThread().getName() +" "+id,"name");
+//                recipeIngredients.setText(meal.getIngredient1());
+//                Log.d("Complete-"+Thread.currentThread().getName() +" "+id,"ingredient");
+//                recipeInstructions.setText( meal.getInstructions());
+//                Log.d("Complete-"+Thread.currentThread().getName() +" "+id,"instructions");
+//                File file = FileHelper.getFilePath(meal.getImageUrl(), this);
+//                Log.d("Complete-"+Thread.currentThread().getName() +" "+id,"Uri");
+//                recipeImage.setImageURI(Uri.parse(file.getPath()));// поместил в конец т.к. раньше здесь после этого возникал Exception если продолжать :
+//                // Can't create handler inside thread Thread[pool-13-thread-1,5,main] that has not called Looper.prepare()
+//                Log.d("Complete-"+Thread.currentThread().getName() +" "+id,"image");
+//            } catch(Exception e){Log.d("Exeption",e.getMessage());}
+//        });
 
-    }
+           try{
+               Collection<Callable<Void>> tasks = new ArrayList<>();
+               ExecutorService executorService = Executors.newWorkStealingPool();
+
+               Callable<Void> callable1=()-> { Meal meal = daoRecipe.getRecipeById(idRecipe);
+                   recipeName.setText(meal.getMealName());
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "name");
+                   return null;
+               };
+                   tasks.add(callable1);
+               Callable<Void> callable2=()-> { Meal meal = daoRecipe.getRecipeById(idRecipe);
+                   recipeIngredients.setText(meal.getIngredient1());
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "ingredient");  return  null;};
+               tasks.add(callable2);
+               Callable<Void> callable3=()-> {Meal meal = daoRecipe.getRecipeById(idRecipe);
+                   recipeInstructions.setText(meal.getInstructions());
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "instructions");  return  null;};
+               tasks.add(callable3);
+               Callable<Void> callable4=()-> {Meal meal = daoRecipe.getRecipeById(idRecipe);
+                   File file = FileHelper.getFilePath(meal.getImageUrl(), this);
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "Uri");
+                   recipeImage.setImageURI(Uri.parse(file.getPath()));// поместил в конец т.к. раньше здесь после этого возникал Exception если продолжать :
+                   // Can't create handler inside thread Thread[pool-13-thread-1,5,main] that has not called Looper.prepare()
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "image");return  null;
+               };
+               tasks.add(callable4);
+
+
+               executorService.invokeAll(tasks);
+           } catch(Exception e){Log.d("Exeption",e.getMessage());}
+
+
+   }
 
     private void fetchRandomRecipe() {
         Retrofit retrofit = new Retrofit.Builder()
@@ -303,6 +350,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                     Glide.with(CreateRecipeActivity.this).load(meal.getImageUrl()).into(recipeImage); // устанавливаем изображение в ImageView
                     imageUrl=meal.getImageUrl();
                     Toast.makeText(CreateRecipeActivity.this, R.string.successDownloadsRecipes, Toast.LENGTH_SHORT).show();
+                    downloadFromInternet=true;
                 }
                 else
                 {

@@ -1,3 +1,4 @@
+
 package com.amicus.recipeapp;
 
 import androidx.room.Entity;

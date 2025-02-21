@@ -1,7 +1,10 @@
 package com.amicus.recipeapp;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
@@ -35,17 +38,16 @@ public class TranslationHelper {
                     .setSourceLanguage(TranslateLanguage.ENGLISH)
                     .setTargetLanguage(TranslateLanguage.RUSSIAN)
                     .build();
-    final Translator englishRussianTranslator=
+    final  Translator englishRussianTranslator=
             Translation.getClient(options);
 
 
    int i =0;
-
-    public void  translateText(String[] strings) {
+    public  void  translateText(String[] strings) {
         ArrayList<String> list= new ArrayList<>();
         for(String str:strings){
-           englishRussianTranslator.translate(str)
-
+           englishRussianTranslator
+                   .translate(str)
                    .addOnSuccessListener(
                     new OnSuccessListener() {
                         @Override
@@ -88,7 +90,7 @@ public class TranslationHelper {
 
 
 
-    public void downloadModel() {
+    public static void downloadModel() {
         RemoteModelManager modelManager = RemoteModelManager.getInstance();
 
 // Get translation models stored on the device.
@@ -116,6 +118,7 @@ public class TranslationHelper {
                     @Override
                     public void onSuccess(Object o) {
                         downloadsModel = true;
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

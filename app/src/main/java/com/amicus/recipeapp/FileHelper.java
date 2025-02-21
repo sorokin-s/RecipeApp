@@ -27,6 +27,7 @@ public class FileHelper {
         try(OutputStream outputStream = new FileOutputStream(file)){
             BitmapDrawable bitmap = (BitmapDrawable) iv.getDrawable();
             bitmap.getBitmap().compress(Bitmap.CompressFormat.JPEG, 70, outputStream);// записываем в файл с сжатием 70%
+           // Log.d("saveError: ", );
         } catch (Exception e) {
             Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
             Log.d("saveError: ", Objects.requireNonNull(e.getMessage()));
