@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -178,6 +179,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
            scrollView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.main3));
             btnSaveInDB.setVisibility(View.VISIBLE);
             btnTranslate.setVisibility(View.VISIBLE);
+            downloadFromInternet = true;
         });
 
         btnDownload.setOnClickListener(b->{       // загрузка рецепта из Internet
@@ -207,7 +209,13 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
                 });
                 FileHelper.saveToFile(nameFile,recipeImage,this);// сохраняем на диске изображение из ImageView c новым именем
-            }if(downloadFromInternet){
+            }if(downloadFromInternet)
+                if(!String.valueOf(recipeName.getText()).isEmpty()&&
+                    !String.valueOf(recipeIngredients.getText()).isBlank()&&
+                    !String.valueOf(recipeInstructions.getText()).isBlank()&&
+                recipeImage.getDrawable()!=null)
+            {
+
                 Executors.newSingleThreadExecutor().execute(()->{ // отправляем запрос в БД для записи значений
                     daoRecipe.insert(new Meal(nameFile,    //имя файлу изображения в БД
                             String.valueOf(recipeName.getText()),
