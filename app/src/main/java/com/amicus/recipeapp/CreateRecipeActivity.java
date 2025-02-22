@@ -209,21 +209,23 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
                 });
                 FileHelper.saveToFile(nameFile,recipeImage,this);// сохраняем на диске изображение из ImageView c новым именем
-            }if(downloadFromInternet)
-                if(!String.valueOf(recipeName.getText()).isEmpty()&&
-                    !String.valueOf(recipeIngredients.getText()).isBlank()&&
-                    !String.valueOf(recipeInstructions.getText()).isBlank()&&
-                recipeImage.getDrawable()!=null)
-            {
+            }if(downloadFromInternet) {
+                if (!String.valueOf(recipeName.getText()).isEmpty() &&
+                        !String.valueOf(recipeIngredients.getText()).isBlank() &&
+                        !String.valueOf(recipeInstructions.getText()).isBlank() &&
+                        recipeImage.getDrawable() != null) {
 
-                Executors.newSingleThreadExecutor().execute(()->{ // отправляем запрос в БД для записи значений
-                    daoRecipe.insert(new Meal(nameFile,    //имя файлу изображения в БД
-                            String.valueOf(recipeName.getText()),
-                            String.valueOf(recipeIngredients.getText()),
-                            String.valueOf(recipeInstructions.getText())));
+                    Executors.newSingleThreadExecutor().execute(() -> { // отправляем запрос в БД для записи значений
+                        daoRecipe.insert(new Meal(nameFile,    //имя файлу изображения в БД
+                                String.valueOf(recipeName.getText()),
+                                String.valueOf(recipeIngredients.getText()),
+                                String.valueOf(recipeInstructions.getText())));
 
-                });
-                FileHelper.saveToFile(nameFile,recipeImage,this);// сохраняем на диске изображение из ImageView c новым именем
+                    });
+                    FileHelper.saveToFile(nameFile, recipeImage, this);// сохраняем на диске изображение из ImageView c новым именем
+                } else {
+                    Toast.makeText(this, "Добавте изображение и заполните все поля", Toast.LENGTH_SHORT).show();
+                }
             }
 
             Intent intent = new Intent();
