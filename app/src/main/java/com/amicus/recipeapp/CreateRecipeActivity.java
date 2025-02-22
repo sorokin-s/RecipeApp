@@ -145,7 +145,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
         });
         translationHelper = new TranslationHelper();
-        translationHelper.addLister(event->translateText( event.getNewValue()));
+        translationHelper.addListener(event->translateText( event.getNewValue())); // подписываемся на событие
         btnTranslate.setOnClickListener(b->{           // кнопка перевода текста с исходного языка
             String[]texts ={String.valueOf(recipeName.getText()),
             String.valueOf(recipeIngredients.getText()),
@@ -235,7 +235,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 
 
     }
-   public void translateText(Object _texts){
+   public void translateText(Object _texts){       // обрабатываем перевод текста
        ArrayList<String> texts = (ArrayList<String>) _texts;
      Log.d("translateText ",String.join(" ,",texts));
        recipeName.setText(texts.get(0));
@@ -301,7 +301,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
                Callable<Void> callable1=()-> { Meal meal = daoRecipe.getRecipeById(idRecipe);
                    recipeName.setText(meal.getMealName());
                    Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "name");
-                   TimeUnit.MICROSECONDS.sleep(100); //  пауза добавлена для теста вроде на рез не влияен
+                   TimeUnit.MICROSECONDS.sleep(100); //  пауза добавлена для теста
                    return null;
                };
                    tasks.add(callable1);

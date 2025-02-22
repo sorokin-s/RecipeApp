@@ -30,8 +30,8 @@ public class TranslationHelper {
     public static boolean downloadsModel;
     public   ArrayList<String> listTransl = new ArrayList<>();
     PropertyChangeSupport psc = new PropertyChangeSupport(this);
-    public void addLister(PropertyChangeListener listner){
-        psc.addPropertyChangeListener(listner);
+    public void addListener(PropertyChangeListener listener){
+        psc.addPropertyChangeListener(listener);
     }
     TranslatorOptions options =
             new TranslatorOptions.Builder()
