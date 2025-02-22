@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -300,23 +301,27 @@ public class CreateRecipeActivity extends AppCompatActivity {
                Callable<Void> callable1=()-> { Meal meal = daoRecipe.getRecipeById(idRecipe);
                    recipeName.setText(meal.getMealName());
                    Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "name");
+                   TimeUnit.MICROSECONDS.sleep(100); //  пауза добавлена для теста вроде на рез не влияен
                    return null;
                };
                    tasks.add(callable1);
                Callable<Void> callable2=()-> { Meal meal = daoRecipe.getRecipeById(idRecipe);
                    recipeIngredients.setText(meal.getIngredient1());
-                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "ingredient");  return  null;};
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "ingredient");
+                   TimeUnit.MICROSECONDS.sleep(100);;return  null;};
                tasks.add(callable2);
                Callable<Void> callable3=()-> {Meal meal = daoRecipe.getRecipeById(idRecipe);
                    recipeInstructions.setText(meal.getInstructions());
-                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "instructions");  return  null;};
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "instructions");
+                   TimeUnit.MICROSECONDS.sleep(100);;return  null;};
                tasks.add(callable3);
                Callable<Void> callable4=()-> {Meal meal = daoRecipe.getRecipeById(idRecipe);
                    File file = FileHelper.getFilePath(meal.getImageUrl(), this);
                    Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "Uri");
                    recipeImage.setImageURI(Uri.parse(file.getPath()));// поместил в конец т.к. раньше здесь после этого возникал Exception если продолжать :
                    // Can't create handler inside thread Thread[pool-13-thread-1,5,main] that has not called Looper.prepare()
-                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "image");return  null;
+                   Log.d("Complete-" + Thread.currentThread().getName() + ":" + id, "image");
+                   TimeUnit.MICROSECONDS.sleep(100);;return  null;
                };
                tasks.add(callable4);
 
