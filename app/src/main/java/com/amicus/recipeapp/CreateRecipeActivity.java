@@ -272,6 +272,7 @@ public class CreateRecipeActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this,MainActivity.class);
 //        intent.putExtra(MainActivity.LOAD_FROM_DB,false);
 //        setResult(RESULT_OK,intent);
+        translationHelper.englishRussianTranslator.close();
         super.onDestroy();
     }
 
